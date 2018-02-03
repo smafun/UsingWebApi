@@ -13,18 +13,6 @@ namespace UsingWebApi.Models
         public String Phone { get; set; }
         public String Email { get; set; }
 
-        public Customer()
-        {
-        }
-
-    /*    public Customer (long id, String name, String phone, String email)
-        {
-            this.Id = id;
-            this.Name = name;
-            this.Phone = phone;
-            this.Email = email;
-        }
-    */
         public String toString() { return this.Id + " " + this.Name + " " + this.Phone + " " + this.Email; }
     }
 }

@@ -4,7 +4,7 @@
 }
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Customer</a>
 </p>
 
 <table class="table table-hover">
@@ -43,12 +43,12 @@
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <a asp-action="Detail" asp-route-id="@item.Id">Detail</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-controller="Orders" asp-action="Create" asp-route-id="@item.Id">Create New Order</a>
                     </td>
                 </tr>
             }
         }
     </tbody>
 </table>
+

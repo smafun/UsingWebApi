@@ -5,7 +5,7 @@
 }
 
 <p>
-    <a asp-controller="Customers" asp-action="Index">Create New</a>
+    <a asp-controller="Customers" asp-action="Index">Create New </a>
 </p>
 
 
@@ -24,19 +24,19 @@
                 @Html.DisplayNameFor(model => model.CustomerId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.addressFrom)
+                @Html.DisplayNameFor(model => model.AddressFrom)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.addressTo)
+                @Html.DisplayNameFor(model => model.AddressTo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.serviceTypes)
+                @Html.DisplayNameFor(model => model.ServiceTypes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.txtField)
+                @Html.DisplayNameFor(model => model.TxtField)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.date)
+                @Html.DisplayNameFor(model => model.Date)
             </th>
         </tr>
     </thead>
@@ -45,29 +45,27 @@
         {
            @foreach (var item in Model)
            {
-                <tr style="cursor:pointer" data-record-id="@item.id">
+                <tr style="cursor:pointer" data-record-id="@item.Id">
                     <td>
                         @Html.DisplayFor(modelItem => item.CustomerId)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.addressFrom)
+                        @Html.DisplayFor(modelItem => item.AddressFrom)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.addressTo)
+                        @Html.DisplayFor(modelItem => item.AddressTo)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.serviceTypes)
+                        @Html.DisplayFor(modelItem => item.ServiceTypes)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.txtField)
+                        @Html.DisplayFor(modelItem => item.TxtField)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.date)
+                        @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.id">Edit</a>
-                        <a asp-action="Detail" asp-route-id="@item.id">Detail</a>
-                        <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     </td>
                 </tr>
            }

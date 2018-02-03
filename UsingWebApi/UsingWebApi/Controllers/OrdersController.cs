@@ -54,129 +54,82 @@ namespace UsingWebApi.Controllers
             }
             
         }
-        /*  // GET: Orders/Details/5
-            public async Task<IActionResult> Details(long? id)
+
+        // GET: Orders/Create
+        public IActionResult Create(long? id)
+        {
+            if (id == null)
             {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var order = await _context.Orders
-                    .SingleOrDefaultAsync(m => m.id == id);
-                if (order == null)
-                {
-                    return NotFound();
-                }
-
-                return View(order);
+                return NotFound();
             }
 
-            // GET: Orders/Create
-            public IActionResult Create()
+            var OrderInfo = new Order();
+            OrderInfo.CustomerId = (long)id;
+
+            return View(OrderInfo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Order order)
+        {
+            if (order.Id > 0)
             {
-                return View();
+                order.Id = 0;
             }
-
-            // POST: Orders/Create
-            // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-            // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Create([Bind("id")] Order order)
+            using (var client = new HttpClient())
             {
-                if (ModelState.IsValid)
+                // Passing service base url
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
                 {
-                    _context.Add(order);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(order);
-            }
-
-            // GET: Orders/Edit/5
-            public async Task<IActionResult> Edit(long? id)
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var order = await _context.Orders.SingleOrDefaultAsync(m => m.id == id);
-                if (order == null)
-                {
-                    return NotFound();
-                }
-                return View(order);
-            }
-
-            // POST: Orders/Edit/5
-            // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-            // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Edit(long id, [Bind("id")] Order order)
-            {
-                if (id != order.id)
-                {
-                    return NotFound();
-                }
-
-                if (ModelState.IsValid)
-                {
-                    try
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.PostAsJsonAsync("order", order);
+                    // Checking the response
+                    if (!Res.IsSuccessStatusCode)
                     {
-                        _context.Update(order);
-                        await _context.SaveChangesAsync();
+                        ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
                     }
-                    catch (DbUpdateConcurrencyException)
-                    {
-                        if (!OrderExists(order.id))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-                    return RedirectToAction(nameof(Index));
                 }
-                return View(order);
-            }
-
-            // GET: Orders/Delete/5
-            public async Task<IActionResult> Delete(long? id)
-            {
-                if (id == null)
+                catch
                 {
-                    return NotFound();
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
                 }
-
-                var order = await _context.Orders
-                    .SingleOrDefaultAsync(m => m.id == id);
-                if (order == null)
-                {
-                    return NotFound();
-                }
-
-                return View(order);
-            }
-
-            // POST: Orders/Delete/5
-            [HttpPost, ActionName("Delete")]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> DeleteConfirmed(long id)
-            {
-                var order = await _context.Orders.SingleOrDefaultAsync(m => m.id == id);
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
+                // rerturn the customer list to view
                 return RedirectToAction(nameof(Index));
             }
+        }
 
-            private bool OrderExists(long id)
+        public async Task<IActionResult> Edit(String id)
+        {
+            var tmpOrder = new Order();
+            String tmp = ConstantsUrl.ORDER + "/" + id;
+            using (var client = new HttpClient())
             {
-                return _context.Orders.Any(e => e.id == id);
-            }*/
+                // Passing service base url
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.GetAsync(tmp);
+                    // Checking the response
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                        tmpOrder = JsonConvert.DeserializeObject<Order>(EmpResponse);
+                    }
+                }
+                catch
+                {
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                    return RedirectToAction(nameof(Index));
+                }
+                // rerturn the order list to view
+                return View(tmpOrder);
+            }
+        }
     }
 }

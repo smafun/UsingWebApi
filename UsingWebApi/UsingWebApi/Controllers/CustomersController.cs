@@ -64,7 +64,7 @@ namespace UsingWebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Customer customer)
         {
-            var CustomerInfo = new Customer();
+            //var CustomerInfo = new Customer();
             using (var client = new HttpClient())
             {
                 // Passing service base url
@@ -87,6 +87,37 @@ namespace UsingWebApi.Controllers
                 }
                 // rerturn the customer list to view
                 return RedirectToAction(nameof(Index));
+            }
+        }
+
+        public async Task<IActionResult> Edit(String id)
+        {
+            var tmpCustomer = new Customer();
+            String tmp = ConstantsUrl.CUSTOMER + "/" + id;
+            using (var client = new HttpClient())
+            {
+                // Passing service base url
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.GetAsync(tmp);
+                    // Checking the response
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                        tmpCustomer = JsonConvert.DeserializeObject<Customer>(EmpResponse);
+                    }
+                }
+                catch
+                {
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                    return RedirectToAction(nameof(Index));
+                }
+                // rerturn the order list to view
+                return View(tmpCustomer);
             }
         }
 

@@ -8,19 +8,20 @@ namespace UsingWebApi.Models
 {
     public class Order
     {
-        public long id { get; set; }
-        [Display (Name="Customer Id")]
-        public long CustomerId { get; set; }
+        public long Id { get; set; }
         [Display(Name = "Adress From")]
-        public String addressFrom { get; set; }
+        public String AddressFrom { get; set; }
         [Display(Name = "Adress To")]
-        public String addressTo { get; set; }
-        public String serviceTypes { get; set; }
+        public String AddressTo { get; set; }
+        [Display(Name = "Service Types")]
+        public String ServiceTypes { get; set; }
         [Display(Name = "Text Field")]
-        public String txtField { get; set; }
-        public String date { get; set; }
+        public String TxtField { get; set; }
+        [Display(Name = "Date")]
+        public String Date { get; set; }
+        [Display(Name = "Customer Id")]
+        public long CustomerId { get; set; }
 
-
-        public String toString() { return this.CustomerId + " " + this.addressFrom + " " + this.addressTo + " " + this.serviceTypes + " " + this.txtField + " " + this.date; }
+        public String toString() { return this.CustomerId + " " + this.AddressFrom + " " + this.AddressTo + " " + this.ServiceTypes + " " + this.TxtField + " " + this.Date; }
     }
 }
