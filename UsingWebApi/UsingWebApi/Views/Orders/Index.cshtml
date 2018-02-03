@@ -1,0 +1,76 @@
+﻿@model IEnumerable<UsingWebApi.Models.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a asp-controller="Customers" asp-action="Index">Create New</a>
+</p>
+
+
+<form asp-controller="Orders" asp-action="Index" method="get">
+    <p>
+        name: <input type="text" name="SearchString" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.addressFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.addressTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.serviceTypes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.txtField)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model != null)
+        {
+           @foreach (var item in Model)
+           {
+                <tr style="cursor:pointer" data-record-id="@item.id">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.addressFrom)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.addressTo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.serviceTypes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.txtField)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.date)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.id">Edit</a>
+                        <a asp-action="Detail" asp-route-id="@item.id">Detail</a>
+                        <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                    </td>
+                </tr>
+           }
+        }
+    </tbody>
+</table>

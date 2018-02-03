@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using UsingWebApi.Data;
 
 namespace UsingWebApi
 {
@@ -22,6 +24,9 @@ namespace UsingWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            //services.AddDbContext<UsingWebApiContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("UsingWebApiContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,8 +48,9 @@ namespace UsingWebApi
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Orders}/{action=Index}/{id?}");
             });
         }
     }
 }
+
