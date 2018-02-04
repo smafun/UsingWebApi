@@ -87,10 +87,11 @@ namespace UsingWebApi.Controllers
                 }
                 // rerturn the customer list to view
                 return RedirectToAction(nameof(Index));
+                //return RedirectToAction("Create", "Orders", 1);
             }
         }
 
-        public async Task<IActionResult> Edit(String id)
+        public async Task<ActionResult> Edit(String id)
         {
             var tmpCustomer = new Customer();
             String tmp = ConstantsUrl.CUSTOMER + "/" + id;
@@ -121,5 +122,41 @@ namespace UsingWebApi.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Customer customer)
+        {
+            if(id != customer.Id)
+            {
+                return NotFound();
+            }
+
+            using (var client = new HttpClient())
+            {
+                // Passing service base url
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.PutAsJsonAsync("customer/"+id,customer);
+                    // Checking the response
+                    if (!Res.IsSuccessStatusCode)
+                    {
+                        ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                        return View(customer);
+                    }
+                }
+                catch
+                {
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                    return View(customer);
+                }
+                // rerturn the order list to view
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace UsingWebApi.Controllers
                 string path = "order";
                 if(! String.IsNullOrEmpty(searchString))
                 {
-                    
+                    //path = path + "/Search/" + searchString;
                 }
                 try
                 {
@@ -131,5 +131,42 @@ namespace UsingWebApi.Controllers
                 return View(tmpOrder);
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Order order)
+        {
+            if (id != order.Id)
+            {
+                return NotFound();
+            }
+
+            using (var client = new HttpClient())
+            {
+                // Passing service base url
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.PutAsJsonAsync("order/" + id, order);
+                    // Checking the response
+                    if (!Res.IsSuccessStatusCode)
+                    {
+                        ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                        return View(order);
+                    }
+                }
+                catch
+                {
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                    return View(order);
+                }
+                // rerturn the order list to view
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        
     }
 }

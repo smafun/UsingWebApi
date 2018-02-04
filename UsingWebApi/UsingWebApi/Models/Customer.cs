@@ -9,8 +9,11 @@ namespace UsingWebApi.Models
     public class Customer
     {
         public long Id { get; set; }
+        [Required]
         public String Name { get; set; }
+        [Required]
         public String Phone { get; set; }
+        [Required]
         public String Email { get; set; }
 
         public String toString() { return this.Id + " " + this.Name + " " + this.Phone + " " + this.Email; }

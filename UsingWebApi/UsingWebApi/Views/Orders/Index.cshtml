@@ -5,7 +5,7 @@
 }
 
 <p>
-    <a asp-controller="Customers" asp-action="Index">Create New </a>
+    <a asp-controller="Customers" asp-action="Index">Create New Order</a>
 </p>
 
 
@@ -16,35 +16,35 @@
     </p>
 </form>
 
+@if (Model != null)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustomerId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AddressFrom)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AddressTo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ServiceTypes)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TxtField)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CustomerId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddressFrom)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddressTo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ServiceTypes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TxtField)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if(Model != null)
-        {
-           @foreach (var item in Model)
-           {
+            @foreach (var item in Model)
+            {
                 <tr style="cursor:pointer" data-record-id="@item.Id">
                     <td>
                         @Html.DisplayFor(modelItem => item.CustomerId)
@@ -68,7 +68,15 @@
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     </td>
                 </tr>
-           }
-        }
-    </tbody>
-</table>
+
+            }
+        </tbody>
+    </table>
+
+    <script>
+        $("tbody tr").click(function () {
+            window.location = '/Orders/Edit?Id=' + $(this).data('data-record-id');
+        });
+    </script>
+
+    }
