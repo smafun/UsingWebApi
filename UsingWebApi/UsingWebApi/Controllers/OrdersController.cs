@@ -30,7 +30,8 @@ namespace UsingWebApi.Controllers
                 string path = "order";
                 if(! String.IsNullOrEmpty(searchString))
                 {
-                    //path = path + "/Search/" + searchString;
+                    //
+                    path = path + "/Search/" + searchString;
                 }
                 try
                 {
@@ -50,18 +51,24 @@ namespace UsingWebApi.Controllers
                     ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
                     return RedirectToAction(nameof(Index));
                 }
+
+                //Order test = OrderInfo.Find(x => x.GetId() == "xy");
                 return View(OrderInfo);
             }
             
         }
 
         // GET: Orders/Create
-        public IActionResult Create(long? id)
+        public IActionResult Create(long? id, string test)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
+            // Start test
+           
+            // End test
 
             var OrderInfo = new Order();
             OrderInfo.CustomerId = (long)id;
@@ -167,6 +174,67 @@ namespace UsingWebApi.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-        
+
+        //Get: OrdersController/DEelte
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var tmpOrder = new Order();
+            String tmp = ConstantsUrl.ORDER + "/" + id;
+            using (var client = new HttpClient())
+            {
+                // Passing service base url
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.GetAsync(tmp);
+                    // Checking the response
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                        tmpOrder = JsonConvert.DeserializeObject<Order>(EmpResponse);
+                    }
+                }
+                catch
+                {
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                    return RedirectToAction(nameof(Index));
+                }
+                // rerturn the order list to view
+                return View(tmpOrder);
+            }
+        }
+
+        //Post: Order/Delete
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.DeleteAsync("order/" + id);
+                    // Checking the response
+                    if (!Res.IsSuccessStatusCode)
+                    {
+                        ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                    }
+                }
+                catch
+                {
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                }
+                // rerturn the order list to view
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
     }
 }

@@ -17,5 +17,10 @@ namespace UsingWebApi.Models
         public String Email { get; set; }
 
         public String toString() { return this.Id + " " + this.Name + " " + this.Phone + " " + this.Email; }
+
+        internal static object SingleOrDefaultAsync(Func<object, bool> p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -7,6 +7,13 @@
     <a asp-action="Create">Create New Customer</a>
 </p>
 
+<form asp-controller="Customers" asp-action="Index" method="get">
+    <p>
+        name: <input type="text" name="SearchString" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
 <table class="table table-hover">
     <thead>
         <tr>
@@ -44,7 +51,8 @@
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-controller="Orders" asp-action="Create" asp-route-id="@item.Id">Create New Order</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                        <a asp-controller="Orders" asp-action="Create" asp-route-id="@item.Id" asp-route-name="@item.Name">Create New Order</a>
                     </td>
                 </tr>
             }

@@ -14,10 +14,11 @@ namespace UsingWebApi.Controllers
 {
     public class CustomersController : Controller
     {
-        public async Task<IActionResult> Index(String searchString)
+       
+        public async Task<ActionResult> Index(String searchString)
         {
+            //searchString = "1";
             List<Customer> CustomerInfo = new List<Customer>();
-
             using (var client = new HttpClient())
             {
                 //Passing service base url
@@ -27,9 +28,10 @@ namespace UsingWebApi.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 string path = "customer";
+
                 if (!String.IsNullOrEmpty(searchString))
                 {
-
+                    path = path + "/" + searchString;
                 }
                 try
                 {
@@ -41,7 +43,7 @@ namespace UsingWebApi.Controllers
                         // Storing the response details received from web api
                         var EmResponse = Res.Content.ReadAsStringAsync().Result;
 
-                        // Deserializing the response received from web api and storing into the order list
+                        // Deserializing the response received from web api and storing into the customer list
                         CustomerInfo = JsonConvert.DeserializeObject<List<Customer>>(EmResponse);
                     }
                 }
@@ -156,7 +158,70 @@ namespace UsingWebApi.Controllers
                 // rerturn the order list to view
                 return RedirectToAction(nameof(Index));
             }
-
         }
+
+        //Get: OrdersController/DEelte
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var tmpCustomer = new Customer();
+            String tmp = ConstantsUrl.CUSTOMER + "/" + id;
+            using (var client = new HttpClient())
+            {
+                // Passing service base url
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.GetAsync(tmp);
+                    // Checking the response
+                    if (!Res.IsSuccessStatusCode)
+                    {
+                        ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                        return RedirectToAction(nameof(Index));
+                    }
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    tmpCustomer = JsonConvert.DeserializeObject<Customer>(EmpResponse);
+                }
+                catch
+                {
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                    return RedirectToAction(nameof(Index));
+                }
+                // rerturn the order list to view
+                return View(tmpCustomer);
+            }
+        }
+
+        //Post: Customer/Delete
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConstantsUrl.REST_SERVICE_URL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    // Sending request to find web api REST service resource using HttpClient
+                    HttpResponseMessage Res = await client.DeleteAsync("customer/"+ id);
+                    // Checking the response
+                    if (!Res.IsSuccessStatusCode)
+                    {
+                        ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                    }
+                }
+                catch
+                {
+                    ViewData["Error"] = ConstantsUrl.ERROR_MESSAGE;
+                }
+                // rerturn the order list to view
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
     }
 }
