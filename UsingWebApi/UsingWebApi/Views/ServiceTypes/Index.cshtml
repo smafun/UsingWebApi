@@ -1,0 +1,49 @@
+﻿@model IEnumerable<UsingWebApi.Models.ServiceType>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-controller="ServiceTypes" asp-action="Create">Create New ServiceType</a>
+</p>
+
+@if (Model != null)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr style="cursor:pointer" data-record-id="@item.Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+    <script>
+        $("tbody tr").click(function () {
+            window.location = '/Orders/Edit?Id=' + $(this).data('data-record-id');
+        });
+    </script>
+
+}
+
+    <p>
+        <a asp-controller="Orders" asp-action="Index">Back to Order List</a> |
+        <a asp-controller="Customers" asp-action="Index">Back to Customers List</a> 
+        
+    </p>
+

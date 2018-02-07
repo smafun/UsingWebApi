@@ -59,7 +59,7 @@ namespace UsingWebApi.Controllers
         }
 
         // GET: Orders/Create
-        public IActionResult Create(long? id, string test)
+        public IActionResult Create(long? id)
         {
             if (id == null)
             {
